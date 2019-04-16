@@ -7,10 +7,18 @@ import java.text.AttributedCharacterIterator;
 public class MinionGegner extends Gegner{
 
 
-    public MinionGegner(int bewegung, int leben, int schaden) {
-        super(bewegung, leben, schaden);
+    public MinionGegner(){
+        leben = 50;
+        schaden = 10;
+        bewegung = 15;
 
 
+
+    }
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.black);
+        g.fillOval(x, y, 20, 20);
     }
 
     @Override

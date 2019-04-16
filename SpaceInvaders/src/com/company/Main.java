@@ -12,6 +12,7 @@ public class Main {
         frm.setTitle("Space Invaders");
         frm.setDefaultCloseOperation(3);
         frm.setResizable(false);
+        frm.setIgnoreRepaint(true);
         Spielfeld sf = new Spielfeld();
 
         frm.add(sf);

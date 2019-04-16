@@ -3,15 +3,19 @@ package com.company;
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
+import java.util.Random;
 
 public class BossGegner extends Gegner{
-    public BossGegner(int bewegung, int leben, int schaden) {
-        super(bewegung, leben, schaden);
-
-
+    public BossGegner() {
+        Random rnd = new Random();
+        schaden = 30;
+        leben = rnd.nextInt(300)+1000;
+        bewegung = rnd.nextInt(10)+100;
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.setColor(Color.red);
+        g.fillOval(x, y, 150, 50);
     }
 
     @Override

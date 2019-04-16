@@ -2,10 +2,7 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,6 +15,15 @@ public class Spielfeld extends JPanel implements KeyListener {
     ArrayList<Timer> t;
     boolean timerStopped;
     int count;
+    int counterCount;
+    int getT;
+    boolean durch;
+    int anotherCount;
+    boolean activateLaser;
+
+
+    ArrayList<Gegner> gegnerArrayList;
+
 
     Spielfeld() {
         this.setFocusable(true);
@@ -27,6 +33,7 @@ public class Spielfeld extends JPanel implements KeyListener {
         s = new Spieler(0, 250, 200, 180);
         geschossArrayList = new ArrayList<>();
         geschossCounter = 0;
+        gegnerArrayList = new ArrayList<>();
         try {
             robot = new Robot();
         } catch (AWTException e) {
@@ -35,14 +42,48 @@ public class Spielfeld extends JPanel implements KeyListener {
         timerStopped = true;
         t = new ArrayList<>();
         count = -1;
+        activateLaser = true;
+        generateGegner();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        s.paintComponent(g);
+        for (Gegner h : gegnerArrayList) {
+            h.paintComponent(g);
+        }
         for (Geschoss h : geschossArrayList) {
             h.paintComponent(g);
         }
+        s.paintComponent(g);
+    }
+
+    int newCounter = -1;
+
+    void generateGegner() {
+        Timer time = new Timer(1500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fixLag();
+                Random rnd = new Random();
+                int rndG = rnd.nextInt(5) + 1;
+                if (rndG == 1) {
+                    gegnerArrayList.add(new BossGegner());
+                    newCounter++;
+                } else if(rndG == 2 || rndG == 3) {
+                    gegnerArrayList.add(new MinionGegner());
+                    newCounter++;
+                }
+                if(!gegnerArrayList.isEmpty()) {
+                    gegnerArrayList.get(newCounter).x = Spielfeld.super.getWidth();
+                    gegnerArrayList.get(newCounter).y = rnd.nextInt(Spielfeld.super.getHeight());
+                    for (Gegner a : gegnerArrayList) {
+                        a.x -= 10;
+                    }
+                }
+                repaint();
+            }
+        });
+        time.start();
     }
 
 
@@ -58,8 +99,8 @@ public class Spielfeld extends JPanel implements KeyListener {
         } else if (key == KeyEvent.VK_S) {
             s.y += 5;
         }
-        if (s.y <= - s.height/4) {
-            s.y = - s.height/4;
+        if (s.y <= -s.height / 4) {
+            s.y = -s.height / 4;
         }
         if (s.y >= this.getHeight() - s.height) {
             s.y = (int) (this.getHeight() - s.height);
@@ -81,19 +122,19 @@ public class Spielfeld extends JPanel implements KeyListener {
                     geschossArrayList.add(new LahmesGeschoss());
                     break;
             }
-            if(geschossArrayList.get(geschossCounter) instanceof StandardGeschoss) {
+            if (geschossArrayList.get(geschossCounter) instanceof StandardGeschoss) {
 
                 doStandard((StandardGeschoss) geschossArrayList.get(geschossCounter));
 
-            } else if(geschossArrayList.get(geschossCounter) instanceof ExplosivGeschoss) {
+            } else if (geschossArrayList.get(geschossCounter) instanceof ExplosivGeschoss) {
 
                 doExplosiv((ExplosivGeschoss) geschossArrayList.get(geschossCounter));
 
-            } else if(geschossArrayList.get(geschossCounter) instanceof LaserGeschoss) {
+            } else if (geschossArrayList.get(geschossCounter) instanceof LaserGeschoss) {
 
                 doLaser((LaserGeschoss) geschossArrayList.get(geschossCounter));
 
-            } else if(geschossArrayList.get(geschossCounter) instanceof LahmesGeschoss) {
+            } else if (geschossArrayList.get(geschossCounter) instanceof LahmesGeschoss) {
 
                 doLahmes((LahmesGeschoss) geschossArrayList.get(geschossCounter));
 
@@ -110,7 +151,7 @@ public class Spielfeld extends JPanel implements KeyListener {
 
     public void doStandard(StandardGeschoss sg) {
 
-        sg.y = s.y + s.height/2;
+        sg.y = s.y + s.height / 2;
         sg.x = s.width;
 
         t.add(new Timer(125, new ActionListener() {
@@ -128,7 +169,7 @@ public class Spielfeld extends JPanel implements KeyListener {
 
     public void doExplosiv(ExplosivGeschoss eg) {
 
-        eg.y = s.y + s.height/2;
+        eg.y = s.y + s.height / 2;
         eg.x = s.width;
 
         t.add(new Timer(125, new ActionListener() {
@@ -144,38 +185,49 @@ public class Spielfeld extends JPanel implements KeyListener {
 
     }
 
-    int counterCount = 0;
-    int getT;
+
 
     public void doLaser(LaserGeschoss lg) {
-
-        lg.y = s.y + s.height/2;
+        durch = false;
+        anotherCount = 0;
+        lg.y = s.y + s.height / 2;
         lg.x = s.width;
         counterCount = 0;
-        t.add(new Timer(125, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fixLag();
-                lg.laserweite += 10;
-                lg.y = s.y + s.height/2;
-                repaint();
-                if(counterCount >= 10) {
-                    stopTimer(t.get(getT));
-                }
-                counterCount++;
-            }
-        }));
-        count++;
-        t.get(count).start();
-        getT = count;
 
+        if(activateLaser) {
+            t.add(new Timer(20, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fixLag();
+                    activateLaser = false;
+                    lg.laserweite += 10;
+                    lg.y = s.y + s.height / 2;
+                    int max = (Spielfeld.super.getWidth() / 10) + 10;
+                    if (counterCount >= max && !durch) {
+                        durch = true;
+                    } else if (durch) {
+                        anotherCount++;
+                        if (anotherCount >= 5000 / 20) {
+                            lg.color = new Color(0, 0, 0, 0);
+                            stopTimer(t.get(getT));
+                            activateLaser = true;
+                        }
+                    }
+                    repaint();
+                    counterCount++;
+                }
+            }));
+            count++;
+            t.get(count).start();
+            getT = count;
+        }
 
 
     }
 
     public void doLahmes(LahmesGeschoss lhg) {
 
-        lhg.y = s.y + s.height/2;
+        lhg.y = s.y + s.height / 2;
         lhg.x = s.width;
 
         t.add(new Timer(125, new ActionListener() {

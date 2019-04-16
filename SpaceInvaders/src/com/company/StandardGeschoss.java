@@ -7,7 +7,7 @@ import java.text.AttributedCharacterIterator;
 public class StandardGeschoss extends Geschoss {
 
     public StandardGeschoss() {
-        geschwindigkeit = 10;
+        geschwindigkeit = 25;
         dmg = 10;
         pierce = false;
         explosion = false;

@@ -14,10 +14,12 @@ int laserweite;
         dmg = 15;
         pierce = true;
         explosion = false;
+        color = Color.green;
+
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.green);
+        g.setColor(color);
         g.fillRect(x, y, laserweite, 10);
     }
 

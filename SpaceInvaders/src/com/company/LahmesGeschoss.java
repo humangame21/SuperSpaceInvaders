@@ -9,7 +9,7 @@ public class LahmesGeschoss extends Geschoss {
 
 
     LahmesGeschoss(){
-        geschwindigkeit = 5;
+        geschwindigkeit = 15;
         dmg = 100;
         pierce = false;
         explosion = true;

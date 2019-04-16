@@ -7,7 +7,7 @@ import java.text.AttributedCharacterIterator;
 public class ExplosivGeschoss extends Geschoss {
 
     ExplosivGeschoss() {
-        geschwindigkeit = 25;
+        geschwindigkeit = 20;
         dmg = 25;
         pierce = false;
         explosion = true;

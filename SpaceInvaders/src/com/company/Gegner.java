@@ -7,16 +7,17 @@ abstract class Gegner extends Graphics {
     int bewegung;
     int leben;
     int schaden;
+    int x;
+    int y;
+    int width;
+    int height;
 
-    public Gegner(int bewegung, int leben, int schaden) {
-        this.bewegung = bewegung;
-        this.leben = leben;
-        this.schaden = schaden;
+    public Gegner() {
+
     }
 
     public void paintComponent(Graphics g) {
-        g.setColor(Color.black);
-        g.fillRect(0,0,100,100);
+       
     }
 
 
