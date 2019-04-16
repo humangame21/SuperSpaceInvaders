@@ -6,14 +6,20 @@ import java.text.AttributedCharacterIterator;
 
 public class LaserGeschoss extends Geschoss {
 
-
+int laserweite;
 
 
     LaserGeschoss(){
         geschwindigkeit = 50;
         dmg = 15;
     }
-    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.green);
+        g.fillRect(x, y, laserweite, 10);
+    }
+
+        @Override
     public Graphics create() {
         return null;
     }

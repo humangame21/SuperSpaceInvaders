@@ -4,19 +4,21 @@ import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
 
-public class StandardGeschoss extends Geschoss {
+public class ExplosivGeschoss extends Geschoss {
 
-    public StandardGeschoss() {
-        geschwindigkeit = 10;
-        dmg = 10;
+    ExplosivGeschoss() {
+        geschwindigkeit = 25;
+        dmg = 25;
     }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.white);
-        g.fillOval(x,y,10,10);
+        g.setColor(Color.orange);
+        g.fillOval(x, y, 25, 25);
     }
 
-    @Override
+
+        @Override
     public Graphics create() {
         return null;
     }

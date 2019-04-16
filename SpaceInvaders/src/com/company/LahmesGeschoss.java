@@ -14,7 +14,11 @@ public class LahmesGeschoss extends Geschoss {
 
     }
 
-
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.red);
+        g.fillOval(x, y, 50, 50);
+    }
 
 
     @Override

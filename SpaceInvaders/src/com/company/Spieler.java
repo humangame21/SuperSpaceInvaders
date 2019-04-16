@@ -40,13 +40,11 @@ public class Spieler extends Graphics implements ImageObserver {
 
 
     public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
+        /*Graphics2D g2d = (Graphics2D) g;
         g2d.rotate(Math.toRadians(90), width / 2.0, height / 2.0);
-        g2d.drawImage(spielerBild,x,y,width,height,this);
-
-
-
+        g2d.drawImage(spielerBild,x,y,width,height,this);*/
+        g.setColor(Color.black);
+        g.fillRect(x,y,width,height);
     }
 
 
