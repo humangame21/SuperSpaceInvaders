@@ -2,6 +2,8 @@ package com.company;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -20,6 +22,8 @@ public class Spieler extends Graphics implements ImageObserver {
 
     BufferedImage spielerBild;
 
+    AffineTransformOp op;
+    AffineTransform tx;
 
     public Spieler(int x, int y, int width,int height) {
 
@@ -35,16 +39,17 @@ public class Spieler extends Graphics implements ImageObserver {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        double rotationRequired = Math.toRadians (90);
+        double locationX = spielerBild.getWidth() / 2;
+        double locationY = spielerBild.getHeight() / 2;
+        tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+        op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 
     }
 
 
     public void paintComponent(Graphics g) {
-        /*Graphics2D g2d = (Graphics2D) g;
-        g2d.rotate(Math.toRadians(90), width / 2.0, height / 2.0);
-        g2d.drawImage(spielerBild,x,y,width,height,this);*/
-        g.setColor(Color.black);
-        g.fillRect(x,y,width,height);
+        g.drawImage(op.filter(spielerBild,null),x,y,width,height,null);
     }
 
 

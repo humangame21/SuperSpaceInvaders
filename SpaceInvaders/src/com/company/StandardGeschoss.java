@@ -9,6 +9,8 @@ public class StandardGeschoss extends Geschoss {
     public StandardGeschoss() {
         geschwindigkeit = 10;
         dmg = 10;
+        pierce = false;
+        explosion = false;
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

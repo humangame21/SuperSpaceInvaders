@@ -9,6 +9,8 @@ public class ExplosivGeschoss extends Geschoss {
     ExplosivGeschoss() {
         geschwindigkeit = 25;
         dmg = 25;
+        pierce = false;
+        explosion = true;
     }
 
     public void paintComponent(Graphics g) {

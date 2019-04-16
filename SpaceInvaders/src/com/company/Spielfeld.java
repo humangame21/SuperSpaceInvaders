@@ -15,13 +15,16 @@ public class Spielfeld extends JPanel implements KeyListener {
     ArrayList<Geschoss> geschossArrayList;
     int geschossCounter;
     Robot robot;
+    ArrayList<Timer> t;
+    boolean timerStopped;
+    int count;
 
     Spielfeld() {
         this.setFocusable(true);
         this.requestFocusInWindow();
         this.addKeyListener(this);
         this.setBackground(Color.blue);
-        s = new Spieler(0, 250, 200, 100);
+        s = new Spieler(0, 250, 200, 180);
         geschossArrayList = new ArrayList<>();
         geschossCounter = 0;
         try {
@@ -29,6 +32,9 @@ public class Spielfeld extends JPanel implements KeyListener {
         } catch (AWTException e) {
             e.printStackTrace();
         }
+        timerStopped = true;
+        t = new ArrayList<>();
+        count = -1;
     }
 
     public void paintComponent(Graphics g) {
@@ -52,8 +58,8 @@ public class Spielfeld extends JPanel implements KeyListener {
         } else if (key == KeyEvent.VK_S) {
             s.y += 5;
         }
-        if (s.y <= 0) {
-            s.y = 0;
+        if (s.y <= - s.height/4) {
+            s.y = - s.height/4;
         }
         if (s.y >= this.getHeight() - s.height) {
             s.y = (int) (this.getHeight() - s.height);
@@ -104,75 +110,84 @@ public class Spielfeld extends JPanel implements KeyListener {
 
     public void doStandard(StandardGeschoss sg) {
 
-        sg.y = s.y+40;
+        sg.y = s.y + s.height/2;
         sg.x = s.width;
 
-        Timer t = new Timer(125, new ActionListener() {
+        t.add(new Timer(125, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 sg.x += 10;
                 repaint();
             }
-        });
-
-        t.start();
+        }));
+        count++;
+        t.get(count).start();
 
     }
 
     public void doExplosiv(ExplosivGeschoss eg) {
 
-        eg.y = s.y+40;
+        eg.y = s.y + s.height/2;
         eg.x = s.width;
 
-        Timer t = new Timer(125, new ActionListener() {
+        t.add(new Timer(125, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 eg.x += 10;
                 repaint();
             }
-        });
-
-        t.start();
+        }));
+        count++;
+        t.get(count).start();
 
     }
 
+    int counterCount = 0;
+    int getT;
+
     public void doLaser(LaserGeschoss lg) {
 
-        lg.y = s.y+40;
+        lg.y = s.y + s.height/2;
         lg.x = s.width;
-
-        Timer t = new Timer(125, new ActionListener() {
+        counterCount = 0;
+        t.add(new Timer(125, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 lg.laserweite += 10;
-                lg.y = s.y+40;
-
+                lg.y = s.y + s.height/2;
                 repaint();
+                if(counterCount >= 10) {
+                    stopTimer(t.get(getT));
+                }
+                counterCount++;
             }
-        });
+        }));
+        count++;
+        t.get(count).start();
+        getT = count;
 
-        t.start();
+
 
     }
 
     public void doLahmes(LahmesGeschoss lhg) {
 
-        lhg.y = s.y+40;
+        lhg.y = s.y + s.height/2;
         lhg.x = s.width;
 
-        Timer t = new Timer(125, new ActionListener() {
+        t.add(new Timer(125, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 lhg.x += 10;
                 repaint();
             }
-        });
-
-        t.start();
+        }));
+        count++;
+        t.get(count).start();
 
     }
 
@@ -182,8 +197,9 @@ public class Spielfeld extends JPanel implements KeyListener {
         robot.mouseMove((int) p.getX(), (int) p.getY());
     }
 
-    public void stopTimer() {
-
+    public void stopTimer(Timer timer) {
+        timer.stop();
+        timerStopped = false;
     }
 
 }

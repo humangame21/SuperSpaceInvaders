@@ -8,6 +8,8 @@ abstract public class Geschoss extends Graphics {
     int dmg;
     int x;
     int y;
+    boolean pierce;
+    boolean explosion;
     Geschoss() {
 
     }

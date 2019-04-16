@@ -11,7 +11,8 @@ public class LahmesGeschoss extends Geschoss {
     LahmesGeschoss(){
         geschwindigkeit = 5;
         dmg = 100;
-
+        pierce = false;
+        explosion = true;
     }
 
     public void paintComponent(Graphics g) {

@@ -12,6 +12,8 @@ int laserweite;
     LaserGeschoss(){
         geschwindigkeit = 50;
         dmg = 15;
+        pierce = true;
+        explosion = false;
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
