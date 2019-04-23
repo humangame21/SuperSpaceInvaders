@@ -11,11 +11,13 @@ public class StandardGeschoss extends Geschoss {
         dmg = 10;
         pierce = false;
         explosion = false;
+        width = 10;
+        height = 10;
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.white);
-        g.fillOval(x,y,10,10);
+        g.fillOval(x,y,width,height);
     }
 
     @Override

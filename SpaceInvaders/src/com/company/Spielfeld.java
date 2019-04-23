@@ -20,6 +20,7 @@ public class Spielfeld extends JPanel implements KeyListener {
     boolean durch;
     int anotherCount;
     boolean activateLaser;
+    boolean einMal;
 
 
     ArrayList<Gegner> gegnerArrayList;
@@ -65,15 +66,21 @@ public class Spielfeld extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 Random rnd = new Random();
-                int rndG = rnd.nextInt(5) + 1;
-                if (rndG == 1) {
-                    gegnerArrayList.add(new BossGegner());
-                    newCounter++;
-                } else if(rndG == 2 || rndG == 3) {
+                int rndG = rnd.nextInt(50) + 1;
+                if (rndG >= 1 && rndG <= 30) {
                     gegnerArrayList.add(new MinionGegner());
                     newCounter++;
+                } else if (rndG == 32 || rndG == 31) {
+                    gegnerArrayList.add(new MittelGegner());
+                    newCounter++;
+                } else if (rndG == 40) {
+                    gegnerArrayList.add(new BossGegner());
+                    newCounter++;
+                } else if(rndG == 35 || rndG == 36 || rndG == 37){
+                    gegnerArrayList.add(new SpiegelGegner());
+                    newCounter++;
                 }
-                if(!gegnerArrayList.isEmpty()) {
+                if (!gegnerArrayList.isEmpty()) {
                     gegnerArrayList.get(newCounter).x = Spielfeld.super.getWidth();
                     gegnerArrayList.get(newCounter).y = rnd.nextInt(Spielfeld.super.getHeight());
                     for (Gegner a : gegnerArrayList) {
@@ -103,11 +110,11 @@ public class Spielfeld extends JPanel implements KeyListener {
             s.y = -s.height / 4;
         }
         if (s.y >= this.getHeight() - s.height) {
-            s.y = (int) (this.getHeight() - s.height);
+            s.y = (this.getHeight() - s.height);
         }
         if (key == KeyEvent.VK_SPACE) {
             Random rdm = new Random();
-            int cases = rdm.nextInt(4) + 1;
+            int cases = rdm.nextInt(5) + 1;
             switch (cases) {
                 case 1:
                     geschossArrayList.add(new StandardGeschoss());
@@ -121,23 +128,31 @@ public class Spielfeld extends JPanel implements KeyListener {
                 case 4:
                     geschossArrayList.add(new LahmesGeschoss());
                     break;
+                case 5:
+                    geschossArrayList.add(new PortalGeschoss());
             }
             if (geschossArrayList.get(geschossCounter) instanceof StandardGeschoss) {
 
-                doStandard((StandardGeschoss) geschossArrayList.get(geschossCounter));
+                //doStandard((StandardGeschoss) geschossArrayList.get(geschossCounter), geschossCounter);
+                doAnything(geschossArrayList.get(geschossCounter), geschossCounter);
 
             } else if (geschossArrayList.get(geschossCounter) instanceof ExplosivGeschoss) {
 
-                doExplosiv((ExplosivGeschoss) geschossArrayList.get(geschossCounter));
+                //doExplosiv((ExplosivGeschoss) geschossArrayList.get(geschossCounter), geschossCounter);
+                doAnything(geschossArrayList.get(geschossCounter), geschossCounter);
 
             } else if (geschossArrayList.get(geschossCounter) instanceof LaserGeschoss) {
 
-                doLaser((LaserGeschoss) geschossArrayList.get(geschossCounter));
+                doLaser((LaserGeschoss) geschossArrayList.get(geschossCounter), geschossCounter);
 
             } else if (geschossArrayList.get(geschossCounter) instanceof LahmesGeschoss) {
 
-                doLahmes((LahmesGeschoss) geschossArrayList.get(geschossCounter));
+                //doLahmes((LahmesGeschoss) geschossArrayList.get(geschossCounter), geschossCounter);
+                doAnything(geschossArrayList.get(geschossCounter), geschossCounter);
 
+            } else if (geschossArrayList.get(geschossCounter) instanceof PortalGeschoss) {
+                //doPortal((PortalGeschoss) geschossArrayList.get(geschossCounter), geschossCounter);
+                doAnything(geschossArrayList.get(geschossCounter), geschossCounter);
             }
             geschossCounter++;
         }
@@ -149,7 +164,36 @@ public class Spielfeld extends JPanel implements KeyListener {
 
     }
 
-    public void doStandard(StandardGeschoss sg) {
+    public void doAnything(Geschoss sg, int index) {
+        sg.y = s.y + s.height / 2;
+        sg.x = s.width;
+
+        t.add(new Timer(125, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fixLag();
+                for(int i = 0; i < newCounter; i++) {
+                    if(sg.x < gegnerArrayList.get(i).x + gegnerArrayList.get(i).width && sg.x + sg.width > gegnerArrayList.get(i).x && sg.y < gegnerArrayList.get(i).y + gegnerArrayList.get(i).height && sg.y + sg.height > gegnerArrayList.get(i).y) {
+                        gegnerArrayList.get(i).leben = gegnerArrayList.get(i).leben - sg.dmg;
+                        System.out.println(gegnerArrayList.get(i).leben - sg.dmg);
+                        sg.color = new Color(0, 0, 0, 0);
+                        sg.dmg = 0;
+                        if (gegnerArrayList.get(i).leben <= 0) {
+                            gegnerArrayList.remove(gegnerArrayList.get(i));
+                            newCounter--;
+                        }
+                    }
+                }
+                sg.x += 10;
+                repaint();
+
+            }
+        }));
+        count++;
+        t.get(count).start();
+    }
+
+    public void doStandard(StandardGeschoss sg, int index) {
 
         sg.y = s.y + s.height / 2;
         sg.x = s.width;
@@ -159,15 +203,35 @@ public class Spielfeld extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 sg.x += 10;
+
+                for(int i = 0; i < gegnerArrayList.size(); i++) {
+
+                    if(sg.x < gegnerArrayList.get(i).x + gegnerArrayList.get(i).width && sg.x + sg.width > gegnerArrayList.get(i).x && sg.y < gegnerArrayList.get(i).y + gegnerArrayList.get(i).height && sg.y + sg.height > gegnerArrayList.get(i).y && !einMal) {
+
+                        gegnerArrayList.get(i).leben = gegnerArrayList.get(i).leben - sg.dmg;
+                        System.out.println(gegnerArrayList.get(i).leben - sg.dmg);
+
+                        geschossArrayList.remove(geschossArrayList.get(geschossArrayList.indexOf(geschossArrayList.get(index))));
+                        geschossCounter--;
+                        einMal = true;
+                        if (gegnerArrayList.get(i).leben <= 0) {
+                            gegnerArrayList.remove(gegnerArrayList.get(gegnerArrayList.indexOf(gegnerArrayList.get(i))));
+                            newCounter--;
+                        }
+
+                    }
+                }
                 repaint();
+
             }
         }));
         count++;
+        einMal=false;
         t.get(count).start();
 
     }
 
-    public void doExplosiv(ExplosivGeschoss eg) {
+    public void doExplosiv(ExplosivGeschoss eg, int index) {
 
         eg.y = s.y + s.height / 2;
         eg.x = s.width;
@@ -177,30 +241,83 @@ public class Spielfeld extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 eg.x += 10;
+                for(int i = 0; i < gegnerArrayList.size(); i++) {
+
+                    if(eg.x < gegnerArrayList.get(i).x + gegnerArrayList.get(i).width && eg.x + eg.width > gegnerArrayList.get(i).x && eg.y < gegnerArrayList.get(i).y + gegnerArrayList.get(i).height && eg.y + eg.height > gegnerArrayList.get(i).y && !einMal) {
+                        geschossArrayList.remove(geschossArrayList.get(geschossArrayList.indexOf(geschossArrayList.get(index))));
+                        geschossCounter--;
+                        einMal=true;
+                        gegnerArrayList.get(i).leben = gegnerArrayList.get(i).leben - eg.dmg;
+                        System.out.println(gegnerArrayList.get(i).leben - eg.dmg);
+                        if (gegnerArrayList.get(i).leben <= 0) {
+                            gegnerArrayList.remove(gegnerArrayList.get(gegnerArrayList.indexOf(gegnerArrayList.get(i))));
+                            newCounter--;
+                        }
+
+                    }
+
+                }
                 repaint();
             }
         }));
+        einMal=false;
         count++;
         t.get(count).start();
 
     }
 
+    public void doPortal(PortalGeschoss pg, int index) {
+        pg.y = s.y + s.height / 2;
+        pg.x = s.width;
 
 
-    public void doLaser(LaserGeschoss lg) {
+        t.add(new Timer(125, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        fixLag();
+                        pg.x += 10;
+                        for(int i = 0; i < gegnerArrayList.size(); i++) {
+
+                            if(pg.x < gegnerArrayList.get(i).x + gegnerArrayList.get(i).width && pg.x + pg.width > gegnerArrayList.get(i).x && pg.y < gegnerArrayList.get(i).y + gegnerArrayList.get(i).height && pg.y + pg.height > gegnerArrayList.get(i).y  && !einMal) {
+                                einMal=true;
+                                geschossArrayList.remove(geschossArrayList.get(geschossArrayList.indexOf(geschossArrayList.get(index))));
+                                geschossCounter--;
+                                gegnerArrayList.get(i).leben = gegnerArrayList.get(i).leben - pg.dmg;
+                                System.out.println(gegnerArrayList.get(i).leben - pg.dmg);
+                                if (gegnerArrayList.get(i).leben <=0) {
+                                    gegnerArrayList.remove(gegnerArrayList.get(gegnerArrayList.indexOf(gegnerArrayList.get(i))));
+                                    newCounter--;
+                                }
+
+                            }
+
+                        }
+                        repaint();
+
+                    }
+                }
+                )
+        );
+        einMal=false;
+        count++;
+        t.get(count).start();
+    }
+
+
+    public void doLaser(LaserGeschoss lg, int index) {
         durch = false;
         anotherCount = 0;
         lg.y = s.y + s.height / 2;
         lg.x = s.width;
         counterCount = 0;
 
-        if(activateLaser) {
+        if (activateLaser) {
             t.add(new Timer(20, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     fixLag();
                     activateLaser = false;
-                    lg.laserweite += 10;
+                    lg.width += 10;
                     lg.y = s.y + s.height / 2;
                     int max = (Spielfeld.super.getWidth() / 10) + 10;
                     if (counterCount >= max && !durch) {
@@ -213,8 +330,22 @@ public class Spielfeld extends JPanel implements KeyListener {
                             activateLaser = true;
                         }
                     }
+                    for(int i = 0; i < gegnerArrayList.size(); i++) {
+
+                        if(lg.x < gegnerArrayList.get(i).x + gegnerArrayList.get(i).width && lg.x + lg.width > gegnerArrayList.get(i).x && lg.y < gegnerArrayList.get(i).y + gegnerArrayList.get(i).height && lg.y + lg.height > gegnerArrayList.get(i).y) {
+                            gegnerArrayList.get(i).leben = gegnerArrayList.get(i).leben - lg.dmg;
+                            System.out.println(gegnerArrayList.get(i).leben - lg.dmg);
+                            if (gegnerArrayList.get(i).leben <= 0) {
+                                gegnerArrayList.remove(gegnerArrayList.get(gegnerArrayList.indexOf(gegnerArrayList.get(i))));
+                                newCounter--;
+                            }
+
+                        }
+
+                    }
                     repaint();
                     counterCount++;
+
                 }
             }));
             count++;
@@ -225,7 +356,7 @@ public class Spielfeld extends JPanel implements KeyListener {
 
     }
 
-    public void doLahmes(LahmesGeschoss lhg) {
+    public void doLahmes(LahmesGeschoss lhg, int index) {
 
         lhg.y = s.y + s.height / 2;
         lhg.x = s.width;
@@ -235,13 +366,28 @@ public class Spielfeld extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
                 fixLag();
                 lhg.x += 10;
+                for (int i = 0; i < gegnerArrayList.size(); i++) {
+                    if (lhg.x < gegnerArrayList.get(i).x + gegnerArrayList.get(i).width && lhg.x + lhg.width > gegnerArrayList.get(i).x && lhg.y < gegnerArrayList.get(i).y + gegnerArrayList.get(i).height && lhg.y + lhg.height > gegnerArrayList.get(i).y&&!einMal) {
+                        einMal=true;
+                        geschossArrayList.remove(geschossArrayList.get(geschossArrayList.indexOf(geschossArrayList.get(index))));
+                        geschossCounter--;
+                        gegnerArrayList.get(i).leben = gegnerArrayList.get(i).leben - lhg.dmg;
+                        if (gegnerArrayList.get(i).leben <= 0) {
+                            gegnerArrayList.remove(gegnerArrayList.get(gegnerArrayList.indexOf(gegnerArrayList.get(i))));
+                            newCounter--;
+                        }
+                    }
+                }
                 repaint();
             }
+
         }));
+        einMal=false;
         count++;
         t.get(count).start();
 
     }
+
 
     public void fixLag() {
         PointerInfo pi = MouseInfo.getPointerInfo();

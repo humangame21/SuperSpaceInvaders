@@ -13,12 +13,14 @@ public class LahmesGeschoss extends Geschoss {
         dmg = 100;
         pierce = false;
         explosion = true;
+        width = 50;
+        height = 50;
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.red);
-        g.fillOval(x, y, 50, 50);
+        g.setColor(Color.cyan);
+        g.fillOval(x, y, width, height);
     }
 
 

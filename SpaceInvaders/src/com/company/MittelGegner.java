@@ -4,20 +4,23 @@ import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
 import java.util.Random;
 
-public class BossGegner extends Gegner{
-    public BossGegner() {
-        Random rnd = new Random();
-        schaden = 30;
-        leben = rnd.nextInt(300)+1000;
-        bewegung = rnd.nextInt(10)+100;
-        width = 150;
-        height = 150;
-        color = Color.red;
+
+
+public class MittelGegner extends Gegner {
+
+    public MittelGegner(){
+        leben = 100;
+        schaden = 20;
+        bewegung = 20;
+        width = 25;
+        height = 35;
+        color = Color.magenta;
     }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(color);
-        g.fillOval(x, y, width, height);
+        g.fillOval(x,y,width,height);
     }
 
     @Override
@@ -199,4 +202,7 @@ public class BossGegner extends Gegner{
     public void dispose() {
 
     }
+
+
+
 }

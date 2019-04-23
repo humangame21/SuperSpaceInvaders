@@ -6,8 +6,6 @@ import java.text.AttributedCharacterIterator;
 
 public class LaserGeschoss extends Geschoss {
 
-int laserweite;
-
 
     LaserGeschoss(){
         geschwindigkeit = 50;
@@ -15,12 +13,13 @@ int laserweite;
         pierce = true;
         explosion = false;
         color = Color.green;
+        height = 10;
 
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(color);
-        g.fillRect(x, y, laserweite, 10);
+        g.fillRect(x, y, width, height);
     }
 
         @Override

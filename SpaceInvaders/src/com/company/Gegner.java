@@ -11,6 +11,8 @@ abstract class Gegner extends Graphics {
     int y;
     int width;
     int height;
+    int projektilgeschw;
+    Color color;
 
     public Gegner() {
 
@@ -19,8 +21,6 @@ abstract class Gegner extends Graphics {
     public void paintComponent(Graphics g) {
        
     }
-
-
     public int getLeben() {
         return leben;
     }
@@ -45,7 +45,15 @@ abstract class Gegner extends Graphics {
         this.bewegung = bewegung;
     }
 
+    public int getWidth() {return width;}
 
+    public void setWidth(int width) {this.width = width;}
 
+    public int getHeight() { return height; }
 
+    public void setHeight(int height){ this.height = height;}
+
+    public int getProjektilgeschw() {return projektilgeschw;}
+
+    public void setProjektilgeschw(int projektilgeschw){this.projektilgeschw = projektilgeschw;};
 }

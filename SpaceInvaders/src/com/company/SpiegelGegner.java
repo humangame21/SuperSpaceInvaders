@@ -1,23 +1,30 @@
 package com.company;
+
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
 import java.util.Random;
 
-public class BossGegner extends Gegner{
-    public BossGegner() {
-        Random rnd = new Random();
+public class SpiegelGegner extends Gegner {
+
+
+    public SpiegelGegner(){
+
         schaden = 30;
-        leben = rnd.nextInt(300)+1000;
-        bewegung = rnd.nextInt(10)+100;
-        width = 150;
-        height = 150;
-        color = Color.red;
-    }
+        leben = 60;
+        bewegung = 20;
+        width = 100;
+        height = 200;
+        color = Color.magenta;
+
+        }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(color);
-        g.fillOval(x, y, width, height);
+        g.fillRect(x, y, width, height);
+
+
     }
 
     @Override

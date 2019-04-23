@@ -1,25 +1,33 @@
 package com.company;
+
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
-import java.util.Random;
 
-public class BossGegner extends Gegner{
-    public BossGegner() {
-        Random rnd = new Random();
-        schaden = 30;
-        leben = rnd.nextInt(300)+1000;
-        bewegung = rnd.nextInt(10)+100;
-        width = 150;
-        height = 150;
-        color = Color.red;
+public class MinigunGeschoss extends Geschoss {
+
+    boolean twoColors = true;
+
+    MinigunGeschoss() {
+        geschwindigkeit=50;
+        dmg=4;
+        pierce=false;
+        explosion=false;
+        width = 15;
+        height = 10;
     }
+
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(color);
-        g.fillOval(x, y, width, height);
+        if (twoColors == true) {
+            g.setColor(Color.red);
+            twoColors = false;
+        } else {
+            g.setColor(Color.white);
+            twoColors = true;
+        }
     }
-
     @Override
     public Graphics create() {
         return null;

@@ -11,14 +11,17 @@ public class MinionGegner extends Gegner{
         leben = 50;
         schaden = 10;
         bewegung = 15;
+        width = 20;
+        height = 20;
+        color = Color.black;
 
 
 
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.black);
-        g.fillOval(x, y, 20, 20);
+        g.setColor(color);
+        g.fillOval(x, y, width, height);
     }
 
     @Override

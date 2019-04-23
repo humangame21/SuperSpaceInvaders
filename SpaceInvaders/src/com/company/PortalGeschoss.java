@@ -1,22 +1,23 @@
 package com.company;
+
 import java.awt.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
-import java.util.Random;
 
-public class BossGegner extends Gegner{
-    public BossGegner() {
-        Random rnd = new Random();
-        schaden = 30;
-        leben = rnd.nextInt(300)+1000;
-        bewegung = rnd.nextInt(10)+100;
-        width = 150;
-        height = 150;
-        color = Color.red;
+public class PortalGeschoss extends Geschoss {
+
+
+    PortalGeschoss() {
+        geschwindigkeit=35;
+        dmg=33;
+        pierce=true;
+        explosion=false;
+        width = 49;
+        height = 99;
     }
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(color);
+        g.setColor(Color.pink);
         g.fillOval(x, y, width, height);
     }
 
@@ -199,4 +200,7 @@ public class BossGegner extends Gegner{
     public void dispose() {
 
     }
+
+
+
 }

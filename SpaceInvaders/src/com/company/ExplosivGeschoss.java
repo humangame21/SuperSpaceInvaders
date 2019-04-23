@@ -11,12 +11,14 @@ public class ExplosivGeschoss extends Geschoss {
         dmg = 25;
         pierce = false;
         explosion = true;
+        width = 25;
+        height = 25;
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.orange);
-        g.fillOval(x, y, 25, 25);
+        g.fillOval(x, y, width, height);
     }
 
 

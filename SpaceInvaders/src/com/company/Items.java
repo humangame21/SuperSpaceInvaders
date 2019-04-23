@@ -19,6 +19,9 @@ public class Items {
         for(int w=0; w<50; w++) {
             item.add(new StandardGeschoss());
         }
+        for(int p=0; p<20; p++){
+            item.add(new PortalGeschoss());
+        }
 
 
     }
