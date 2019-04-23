@@ -9,7 +9,7 @@ public class LaserGeschoss extends Geschoss {
 
     LaserGeschoss(){
         geschwindigkeit = 50;
-        dmg = 15;
+        dmg = 3;
         pierce = true;
         explosion = false;
         color = Color.green;
