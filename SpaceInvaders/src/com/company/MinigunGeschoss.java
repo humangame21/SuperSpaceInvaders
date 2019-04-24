@@ -20,13 +20,8 @@ public class MinigunGeschoss extends Geschoss {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (twoColors == true) {
-            g.setColor(Color.red);
-            twoColors = false;
-        } else {
-            g.setColor(Color.white);
-            twoColors = true;
-        }
+        g.setColor(Color.red);
+        g.fillOval(x, y, width, height);
     }
     @Override
     public Graphics create() {
